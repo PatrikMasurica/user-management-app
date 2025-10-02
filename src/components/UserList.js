@@ -11,10 +11,14 @@ function UserList() {
 
   const handleSort = (field) => {
     if (field === sortField) {
+
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
+
       setSortField(field);
+
       setSortDirection('asc');
+      
     }
   };
 
@@ -51,6 +55,7 @@ function UserList() {
       />
       <div className="sort-controls">
         <button onClick={() => handleSort('name')} className="sort-button">
+
           Sort by Name {sortField === 'name' && (sortDirection === 'asc' ? '↑' : '↓')}
         </button>
         <button onClick={() => handleSort('email')} className="sort-button">
@@ -59,6 +64,7 @@ function UserList() {
         <button onClick={() => handleSort('company')} className="sort-button">
           Sort by Company {sortField === 'company' && (sortDirection === 'asc' ? '↑' : '↓')}
         </button>
+
       </div>
       <div className="user-grid">
         {sortedUsers.map(user => (
@@ -66,6 +72,7 @@ function UserList() {
             <Link to={`/user/${user.id}`}>
               <h3>{user.name}</h3>
             </Link>
+            
             <p>Email: {user.email}</p>
             <p>Company: {user.company.name}</p>
             <button 

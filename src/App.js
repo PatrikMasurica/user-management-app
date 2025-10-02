@@ -50,6 +50,7 @@ function AppContent() {
 }
 
 function App() {
+  
   return (
     <Provider store={store}>
       <BrowserRouter>
