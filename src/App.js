@@ -1,53 +1,61 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import { store } from './store';
+import { setUsers, setLoading, setError } from './store/slices/userSlice';
 import UserList from './components/UserList';
 import UserDetails from './components/UserDetails';
 import AddUser from './components/AddUser';
 import './App.css';
 
-function App() {
-  const [users, setUsers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+function AppContent() {
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/users');
-      setUsers(response.data);
+      try {
+        dispatch(setLoading(true));
+        const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+        dispatch(setUsers(response.data));
+      } catch (error) {
+        dispatch(setError(error.message));
+      } finally {
+        dispatch(setLoading(false));
+      }
     };
     fetchUsers();
-  }, []);
-
-  const handleAddUser = (newUser) => {
-    setUsers([newUser, ...users]);
-  };
+  }, [dispatch]);
 
   return (
-    <BrowserRouter>
-      <div className="app">
-        <nav>
-          <h1>User Management App</h1>
-          <div>
-            <Link to="/" className="nav-link">Users</Link>
-            <Link to="/add" className="nav-link">Add User</Link>
-          </div>
-        </nav>
+    <div className="app">
+      <nav>
+        <h1>User Management App</h1>
+        <div>
+          <Link to="/" className="nav-link">Users</Link>
+          <Link to="/add" className="nav-link">Add User</Link>
+        </div>
+      </nav>
 
-        <main>
-          <Routes>
-            <Route path="/" element={
-              <UserList 
-                users={users} 
-                searchTerm={searchTerm} 
-                setSearchTerm={setSearchTerm} 
-              />
-            } />
-            <Route path="/user/:id" element={<UserDetails />} />
-            <Route path="/add" element={<AddUser onAddUser={handleAddUser} />} />
-          </Routes>
-        </main>
-      </div>
-    </BrowserRouter>
+      <main>
+        <Routes>
+          <Route path="/" element={<UserList />} />
+          <Route path="/user/:id" element={<UserDetails />} />
+          <Route path="/add" element={<AddUser />} />
+        </Routes>
+      </main>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </Provider>
   );
 }
 
