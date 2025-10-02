@@ -68,10 +68,10 @@ function UserList() {
       </div>
       <div className="user-grid">
         {sortedUsers.map(user => (
+           <Link to={`/user/${user.id}`}>
           <div key={user.id} className="user-card">
-            <Link to={`/user/${user.id}`}>
+           
               <h3>{user.name}</h3>
-            </Link>
             
             <p>Email: {user.email}</p>
             <p>Company: {user.company.name}</p>
@@ -82,6 +82,8 @@ function UserList() {
               Delete
             </button>
           </div>
+            </Link>
+
         ))}
       </div>
     </div>
